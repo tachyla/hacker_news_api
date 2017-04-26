@@ -11,17 +11,27 @@ app.use(morgan(':method :url :res[location] :status'));
 
 app.use(bodyParser.json());
 
-// ADD ENDPOINTS HERE
-// let title = req.query.title;
-// let url = req.query.url;
+// ADD GET ENDPOINT
+app.get('/api/stories', (req, res) => {
+  // const reqProperties = ['title', 'url']; 
+  knex.select('title', 'url')
+    .from('stories')
+    .orderBy('votes')
+    .limit(20)
+    .returning(['title', 'votes'])
+    .then((results) => {return res.json({results});
+    });
+});
+
+//ADD POST ENDPOINT
+// knex('stories',['title', 'url'])
+//   .insert({title: 'Post 3', url: 'www.post3.com'})
+//   .then(results => res.json(results))
+  // return res.status(201);
+// }
+// });
 
 
-app.post('/api/stories', (req, res) => {
-  const reqProperties = ['title', 'url']; 
-  // for(i=0; i<reqProperties.length; i++) {
-  //   const property = reqProperties[i];
-  //   if(!(property in req.body)) {}
-  }
 
 let server;
 let knex;
