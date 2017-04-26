@@ -16,21 +16,24 @@ app.get('/api/stories', (req, res) => {
   // const reqProperties = ['title', 'url']; 
   knex.select('title', 'url')
     .from('stories')
-    .orderBy('votes')
-    .limit(20)
+    .orderBy('votes', 'desc')
+    // .limit(20)
     .returning(['title', 'votes'])
     .then((results) => {return res.json({results});
     });
 });
 
 //ADD POST ENDPOINT
-// knex('stories',['title', 'url'])
-//   .insert({title: 'Post 3', url: 'www.post3.com'})
-//   .then(results => res.json(results))
-  // return res.status(201);
-// }
-// });
-
+app.post('/api/stories/:entry', (req, res) => {
+  knex('stories')
+    .insert({'title': 'Post 4', 'url': 'www.post4.com'})
+    .where('entry', req.params.entry)
+    // .increment('votes', 1)
+    .returning(['title', 'url'])
+    .then((results) => {return res.status(201).json({results});
+    });
+});
+// increment — .increment(column, amount)
 
 
 let server;
