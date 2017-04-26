@@ -11,6 +11,17 @@ app.use(morgan(':method :url :res[location] :status'));
 app.use(bodyParser.json());
 
 // ADD ENDPOINTS HERE
+// let title = req.query.title;
+// let url = req.query.url;
+
+
+app.post('/api/stories', (req, res) => {
+  const reqProperties = ['title', 'url']; 
+  // for(i=0; i<reqProperties.length; i++) {
+  //   const property = reqProperties[i];
+  //   if(!(property in req.body)) {}
+      res.
+  }
 
 let server;
 let knex;
