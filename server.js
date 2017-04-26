@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const { DATABASE, PORT } = require('./config');
 
@@ -20,7 +21,6 @@ app.post('/api/stories', (req, res) => {
   // for(i=0; i<reqProperties.length; i++) {
   //   const property = reqProperties[i];
   //   if(!(property in req.body)) {}
-      res.
   }
 
 let server;

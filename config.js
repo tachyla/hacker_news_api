@@ -2,7 +2,8 @@ const DATABASE_URL = process.env.DATABASE_URL || global.DATABASE_URL || 'postgre
 
 exports.DATABASE = {
   client: 'pg',
-  connection: 'postgres://ketifrif:5Ezna2ojaWREDfvWBE-oyy2kAzJi2bsx@stampy.db.elephantsql.com:5432/ketifrif',
+
+  connection: DATABASE_URL,
   debug: true
 };
 
