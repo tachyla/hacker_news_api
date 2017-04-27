@@ -51,13 +51,12 @@ app.put('/api/stories/:id', (req, res) => {
   }
 
   knex.select('stories')
-    .whereIn('id', req.body)
-    .increment('votes', 1)
-    .update({'votes': function() {
-      return this + 1;
-    }
-    })
-    .then(() => {return res.status(204).send('Cool post bro!');
+    .whereIn('id', 'req.body.id')
+    .increment('votes')
+    // .update({'votes': function() {
+    //   return this + 1;
+    // }
+    .then(() => {return res.status(204).end;
     });
 });
 // increment — .increment(column, amount)
