@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+
 const { DATABASE, PORT } = require('./config');
 
 const app = express();
@@ -11,10 +12,19 @@ app.use(bodyParser.json());
 
 // ADD GET ENDPOINT
 app.get('/api/stories', (req, res) => {
+
   knex.select('title', 'url')
     .from('stories')
     .orderBy('votes')
     // .limit(20)
+
+  // const reqProperties = ['title', 'url'];
+  knex.select('title', 'url', 'votes', 'id')
+    .from('stories')
+    .orderBy('votes')
+    // .limit(20)
+    // .returningarticle(['title', 'votes'])
+
     .then((results) => {return res.json({results});
     });
 });
@@ -38,10 +48,11 @@ app.post('/api/stories', (req, res) => {
 
 app.put('/api/stories/:id', (req, res) => {
 
-  knex.select('stories')
-    .whereIn('id', req.params.id)
+
+  knex('stories')
+    .where('id', req.params.id)
     .increment('votes')
-    .then(() => {return res.status(204).end;
+    .then(() => {return res.status(204).end();
     });
 });
 
