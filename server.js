@@ -12,19 +12,11 @@ app.use(bodyParser.json());
 
 // ADD GET ENDPOINT
 app.get('/api/stories', (req, res) => {
-
-  knex.select('title', 'url')
-    .from('stories')
-    .orderBy('votes')
-    // .limit(20)
-
-  // const reqProperties = ['title', 'url'];
   knex.select('title', 'url', 'votes', 'id')
     .from('stories')
     .orderBy('votes')
     // .limit(20)
     // .returningarticle(['title', 'votes'])
-
     .then((results) => {return res.json({results});
     });
 });
