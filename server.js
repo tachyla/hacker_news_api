@@ -25,14 +25,39 @@ app.get('/api/stories', (req, res) => {
 
 //ADD POST ENDPOINT
 app.post('/api/stories', (req, res) => {
-  //insert if statement req.body has req.body.title req.body.url, send 500 status
-  if(!(req.params in req.body)){
-    return res.status(500).send('unsuccessful post!');
+  const reqProperties = ['title', 'url'];
+  for(let i=0; i<reqProperties.length; i++) {
+    const property = reqProperties[i];
+    if(!(property in req.body)){
+      //insert if statement req.body has req.body.title req.body.url, send 500 status
+      return res.status(500).send('unsuccessful post!');
+    }
   }
+
   knex('stories')
     .insert({'title': req.body.title, 'url': req.body.url})
     // .returning(['title', 'url'])
     .then((results) => {return res.status(201).json({results});
+    });
+});
+
+app.put('/api/stories/:id', (req, res) => {
+  const reqProperties = ['title', 'url', 'id'];
+  for(let i=0; i<reqProperties.length; i++) {
+    const property = reqProperties[i];
+    if(!(property in req.body)) {
+      return res.status(500).send('unsuccessful update!');
+    }
+  }
+
+  knex.select('stories')
+    .whereIn('id', req.body)
+    .increment('votes', 1)
+    .update({'votes': function() {
+      return this + 1;
+    }
+    })
+    .then(() => {return res.status(204).send('Cool post bro!');
     });
 });
 // increment — .increment(column, amount)
