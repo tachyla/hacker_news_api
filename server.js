@@ -1,8 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-require('dotenv').config();
-
 const { DATABASE, PORT } = require('./config');
 
 const app = express();
@@ -13,12 +11,10 @@ app.use(bodyParser.json());
 
 // ADD GET ENDPOINT
 app.get('/api/stories', (req, res) => {
-  // const reqProperties = ['title', 'url']; 
   knex.select('title', 'url')
     .from('stories')
     .orderBy('votes')
     // .limit(20)
-    .returning(['title', 'votes'])
     .then((results) => {return res.json({results});
     });
 });
@@ -36,34 +32,18 @@ app.post('/api/stories', (req, res) => {
 
   knex('stories')
     .insert({'title': req.body.title, 'url': req.body.url})
-    // .returning(['title', 'url'])
     .then((results) => {return res.status(201).json({results});
     });
 });
 
 app.put('/api/stories/:id', (req, res) => {
-  const reqProperties = ['title', 'url', 'id'];
-  for(let i=0; i<reqProperties.length; i++) {
-    const property = reqProperties[i];
-    if(!(property in req.body)) {
-      return res.status(500).send('unsuccessful update!');
-    }
-  }
 
   knex.select('stories')
-    .whereIn('id', 'req.body.id')
+    .whereIn('id', req.params.id)
     .increment('votes')
-    // .update({'votes': function() {
-    //   return this + 1;
-    // }
     .then(() => {return res.status(204).end;
     });
 });
-// increment — .increment(column, amount)
-// /:entry
-// .where('entry', req.params.entry)
-//bc of object destructuring you can do req.body, but you don't want to bc they can cheat votes
-
 
 let server;
 let knex;
