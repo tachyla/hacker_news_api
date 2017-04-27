@@ -13,8 +13,8 @@ app.use(bodyParser.json());
 // ADD GET ENDPOINT
 app.get('/api/stories', (req, res) => {
   // const reqProperties = ['title', 'url'];
-  knex.select('title', 'url')
-    .from('article')
+  knex.select('title', 'url', 'votes', 'id')
+    .from('stories')
     .orderBy('votes')
     // .limit(20)
     // .returningarticle(['title', 'votes'])
@@ -33,7 +33,7 @@ app.post('/api/stories', (req, res) => {
     }
   }
 
-  knex('article')
+  knex('stories')
     .insert({'title': req.body.title, 'url': req.body.url})
     // .returning(['title', 'url'])
     .then((results) => {return res.status(201).json({results});
@@ -49,7 +49,7 @@ app.put('/api/stories/:id', (req, res) => {
   //   }
   // }
 
-  knex('article')
+  knex('stories')
     .where('id', req.params.id)
     .increment('votes')
     .then(() => {return res.status(204).end();
