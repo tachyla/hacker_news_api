@@ -1,7 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-require('dotenv').config();
 
 const { DATABASE, PORT } = require('./config');
 
@@ -13,12 +12,12 @@ app.use(bodyParser.json());
 
 // ADD GET ENDPOINT
 app.get('/api/stories', (req, res) => {
-  // const reqProperties = ['title', 'url']; 
-  knex.select('title', 'url')
+  // const reqProperties = ['title', 'url'];
+  knex.select('title', 'url', 'votes', 'id')
     .from('stories')
     .orderBy('votes')
     // .limit(20)
-    .returning(['title', 'votes'])
+    // .returningarticle(['title', 'votes'])
     .then((results) => {return res.json({results});
     });
 });
@@ -42,21 +41,18 @@ app.post('/api/stories', (req, res) => {
 });
 
 app.put('/api/stories/:id', (req, res) => {
-  const reqProperties = ['title', 'url', 'id'];
-  for(let i=0; i<reqProperties.length; i++) {
-    const property = reqProperties[i];
-    if(!(property in req.body)) {
-      return res.status(500).send('unsuccessful update!');
-    }
-  }
+  // const reqProperties = ['title', 'url', 'id'];
+  // for(let i=0; i<reqProperties.length; i++) {
+  //   const property = reqProperties[i];
+  //   if(!(property in req.body)) {
+  //     return res.status(500).send('unsuccessful update!');
+  //   }
+  // }
 
-  knex.select('stories')
-    .whereIn('id', 'req.body.id')
+  knex('stories')
+    .where('id', req.params.id)
     .increment('votes')
-    // .update({'votes': function() {
-    //   return this + 1;
-    // }
-    .then(() => {return res.status(204).end;
+    .then(() => {return res.status(204).end();
     });
 });
 // increment — .increment(column, amount)
