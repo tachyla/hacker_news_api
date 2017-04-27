@@ -16,7 +16,7 @@ app.get('/api/stories', (req, res) => {
   // const reqProperties = ['title', 'url']; 
   knex.select('title', 'url')
     .from('stories')
-    .orderBy('votes', 'desc')
+    .orderBy('votes')
     // .limit(20)
     .returning(['title', 'votes'])
     .then((results) => {return res.json({results});
@@ -24,16 +24,21 @@ app.get('/api/stories', (req, res) => {
 });
 
 //ADD POST ENDPOINT
-app.post('/api/stories/:entry', (req, res) => {
+app.post('/api/stories', (req, res) => {
+  //insert if statement req.body has req.body.title req.body.url, send 500 status
+  if(!(req.params in req.body)){
+    return res.status(500).send('unsuccessful post!');
+  }
   knex('stories')
-    .insert({'title': 'Post 4', 'url': 'www.post4.com'})
-    .where('entry', req.params.entry)
-    // .increment('votes', 1)
-    .returning(['title', 'url'])
+    .insert({'title': req.body.title, 'url': req.body.url})
+    // .returning(['title', 'url'])
     .then((results) => {return res.status(201).json({results});
     });
 });
 // increment — .increment(column, amount)
+// /:entry
+// .where('entry', req.params.entry)
+//bc of object destructuring you can do req.body, but you don't want to bc they can cheat votes
 
 
 let server;
